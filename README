@@ -1,0 +1,10 @@
+
+
+
+### TODO
+- Use method (default: GET)
+- Skip based on response HttpCode (default: 404). Can assign multiple: "301,301,404"
+- Skip based on content size: (default: no). [--skipsize 197] OR range [--skipsize 97-102]
+
+
+
