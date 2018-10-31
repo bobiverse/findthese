@@ -2,9 +2,20 @@
 
 
 ### TODO
-- Use method (default: GET)
+- Use method (default: HEAD)
 - Skip based on response HttpCode (default: 404). Can assign multiple: "301,301,404"
 - Skip based on content size: (default: no). [--skipsize 197] OR range [--skipsize 97-102]
-
-
-
+- Skip based on content in response [--skipcontent="Forbidden biatchj"] (including headers)
+- Depth to go [--depth=2] (default: all)
+- Mark placeholder for file to put in URL: https://example.com?f=^FILE^&auth=john
+- Do not compare these folders [--ignore-dirs .git,.hg,.svn].
+- Do not compare these fileformats [--ignore-files .png,.gif,.jpeg,.jpg].
+- [--delay 100] Delay every request
+- Estimated time based on delay and filecount
+- [--user-agent=....] User agent
+-- [--mode=info|download] (default: info)
+-- verbose
+-- cookie
+-- On first success pause show content and press Y to continue
+-- file download path where to download all files
+-- read robots and .htaccess for paths
