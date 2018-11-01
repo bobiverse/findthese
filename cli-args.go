@@ -23,8 +23,10 @@ func parseArgs() {
 	flaggy.String(&argEndpoint, "u", "url", "URL endpoint to hit -- REQUIRED")
 	flaggy.String(&argMethod, "m", "method", "HTTP Method to use (default: "+argMethod+")")
 	flaggy.String(&argOutput, "o", "output", "Output report to file (default: "+argOutput+")")
-	flaggy.String(&argOutput, "z", "delay", "Delay every request for N milliseconds (default: 250)")
-	flaggy.StringSlice(&argSkipExts, "", "skip-ext", "Skip files with these extensions (default: png, gif, jpg, jpeg)")
+	flaggy.String(&argOutput, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
+	flaggy.StringSlice(&argSkip, "", "skip", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkip)+")")
+	flaggy.StringSlice(&argSkipExts, "", "skip-ext", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkipExts)+")")
+	flaggy.Bool(&argDirOnly, "", "dir-only", "Scan directories only")
 
 	// set the version and parse all inputs into variables
 	flaggy.SetVersion(version)
@@ -65,8 +67,12 @@ func validateArgs() error {
 	// Delay
 	argDelay = int(math.Abs(float64(argDelay)))
 
+	// Skpi files/dirs
+	argSkip = normalizeArgSlice(argSkip)
+
 	// Skiped extensions
 	var exts []string
+	argSkipExts = normalizeArgSlice(argSkipExts)
 	for _, ext := range argSkipExts {
 		ext = strings.Trim(ext, " .")
 		ext = strings.ToLower(ext)
@@ -83,11 +89,27 @@ func validateArgs() error {
 
 func printUsedArgs() {
 	fmt.Println(strings.Repeat("-", 80))
-	color.Cyan("%12s: %s", "Source path", argSourcePath)
-	color.Cyan("%12s: %s", "URL", argEndpoint)
-	color.Cyan("%12s: %s", "Method", argMethod)
-	color.Cyan("%12s: %s", "Output", argOutput)
-	color.Cyan("%12s: %d", "Delay (ms)", argDelay)
-	color.Cyan("%12s: %v", "Ignored extensions", argSkipExts)
+	color.Cyan("%20s: %s", "Source path", argSourcePath)
+	color.Cyan("%20s: %s", "URL", argEndpoint)
+	color.Cyan("%20s: %s", "Method", argMethod)
+	color.Cyan("%20s: %v", "Dir only", argDirOnly)
+	color.Cyan("%20s: %s", "Output", argOutput)
+	color.Cyan("%20s: %d (ms)", "Delay", argDelay)
+	color.Cyan("%20s: %v", "Ignore dir/files", argSkip)
+	color.Cyan("%20s: %v", "Ignore extensions", argSkipExts)
+	color.Cyan("%20s: %v", "Mutation options", argBackups)
 	fmt.Println(strings.Repeat("-", 80))
+}
+
+func normalizeArgSlice(arr []string) []string {
+	s := strings.Join(arr, ",")
+
+	// all to one separator
+	s = strings.Replace(s, ";", ",", -1)
+	s = strings.Replace(s, "/", ",", -1)
+	s = strings.Replace(s, "|", ",", -1)
+
+	// back to slice and items that added in as cli also now separated
+	arr = strings.Split(s, ",")
+	return arr
 }
