@@ -26,6 +26,8 @@ var argOutput = "./findthese.report"                                            
 var argDelay = 100                                                                  // assigned default value
 var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}              // assigned default value
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
+var argSkipCodes = []string{"404"}                                                  // assigned default value
+var argSkipSizes = []string{"-1", "0"}                                              // assigned default value
 var argDirOnly = false                                                              // assigned default value
 
 // asterisk "*" replaced by filename
@@ -119,7 +121,7 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		sMore := "" // add at the end of line
 		switch {
 
-		case sCode == "404" || resp.ContentLength <= 0:
+		case inSlice(sCode, argSkipCodes) || inSlice(sLength, argSkipSizes):
 			// do not print out
 			fmt.Printf("\r")
 			fmt.Printf(strings.Repeat(" ", 80)) // cleaning

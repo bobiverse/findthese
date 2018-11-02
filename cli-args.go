@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/fatih/color"
@@ -26,6 +27,8 @@ func parseArgs() {
 	flaggy.String(&argOutput, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
 	flaggy.StringSlice(&argSkip, "", "skip", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkip)+")")
 	flaggy.StringSlice(&argSkipExts, "", "skip-ext", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkipExts)+")")
+	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")
+	flaggy.StringSlice(&argSkipSizes, "", "skip-size", "Skip responses with this body size (default: "+fmt.Sprintf("%v", argSkipSizes)+")")
 	flaggy.Bool(&argDirOnly, "", "dir-only", "Scan directories only")
 
 	// set the version and parse all inputs into variables
@@ -83,6 +86,36 @@ func validateArgs() error {
 	}
 	argSkipExts = exts
 
+	// Skiped sizes
+	var sizes []string
+	argSkipSizes = normalizeArgSlice(argSkipSizes)
+	for _, s := range argSkipSizes {
+
+		// Range definitions 100-200
+		if strings.Contains(s, "-") {
+			parts := strings.Split(s, "-")
+			n1, _ := strconv.Atoi(parts[0])
+			n2, _ := strconv.Atoi(parts[1])
+			n1 = int(math.Abs(float64(n1)))
+			n2 = int(math.Abs(float64(n2)))
+			if n1 > n2 {
+				n2 = n1 + 10
+			} else if n2 > n1 {
+				n1 = n2 - 10
+				if n1 < 0 {
+					n1 = 0
+				}
+			}
+			for n := n1; n <= n2; n++ {
+				sizes = append(sizes, fmt.Sprintf("%d", n))
+			}
+			continue
+		}
+
+		sizes = append(sizes, s)
+	}
+	argSkipSizes = sizes
+
 	// No errors
 	return nil
 }
@@ -97,6 +130,8 @@ func printUsedArgs() {
 	color.Cyan("%20s: %d (ms)", "Delay", argDelay)
 	color.Cyan("%20s: %v", "Ignore dir/files", argSkip)
 	color.Cyan("%20s: %v", "Ignore extensions", argSkipExts)
+	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)
+	color.Cyan("%20s: %v", "Ignore by size", argSkipSizes)
 	color.Cyan("%20s: %v", "Mutation options", argBackups)
 	fmt.Println(strings.Repeat("-", 80))
 }
