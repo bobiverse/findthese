@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -88,7 +89,7 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	// generate mutations fpath list based on given fpath
 	var fpaths []string
 	fpaths = filePathMutations(fpath, argBackups)
-	fpaths = append(fpaths, fpath) // keep original fpath too
+	fpaths = append([]string{fpath}, fpaths...) // keep original fpath too as first
 
 	// Loop throw all fpath versions
 	for _, fpath := range fpaths {
@@ -107,14 +108,23 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		}
 
 		sCode := fmt.Sprintf("%d", resp.StatusCode)
+
+		// try to read real body length if -1 found
+		if resp.ContentLength == -1 {
+			buf, _ := ioutil.ReadAll(resp.Body)
+			resp.ContentLength = int64(len(buf))
+		}
 		sLength := fmt.Sprintf("%d", resp.ContentLength)
+
 		sMore := "" // add at the end of line
 		switch {
 
-		case sCode == "404" || sLength == "-1":
+		case sCode == "404" || resp.ContentLength <= 0:
 			// do not print out
 			fmt.Printf("\r")
-			fmt.Printf("-> %20s \tCODE:%s SIZE:%s ", fname, sCode, sLength)
+			fmt.Printf(strings.Repeat(" ", 80)) // cleaning
+			fmt.Printf("\r")
+			fmt.Printf("-> %s%s \tCODE:%s SIZE:%s ", color.MagentaString(argEndpoint), fpath, sCode, sLength)
 			fmt.Printf(strings.Repeat(" ", 80)) // cleaning
 			fmt.Printf("\r")
 			continue
