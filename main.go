@@ -27,7 +27,7 @@ var argDelay = 100                                                              
 var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}              // assigned default value
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
 var argSkipCodes = []string{"404"}                                                  // assigned default value
-var argSkipSizes = []string{"-1", "0"}                                              // assigned default value
+var argSkipSizes = []string{}                                                       // assigned default value
 var argDirOnly = false                                                              // assigned default value
 
 // asterisk "*" replaced by filename
@@ -140,12 +140,12 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			sMore += color.CyanString(fullURL)
 
 		case sCode[:1] == "4": // 4xx codes
-			sCode = color.YellowString(sCode)
-			sMore += color.YellowString(fullURL)
-
-		case sCode[:1] == "5": // 5xx codes
 			sCode = color.RedString(sCode)
 			sMore += color.RedString(fullURL)
+
+		case sCode[:1] == "5": // 5xx codes
+			sCode = color.BlueString(sCode)
+			sMore += color.BlueString(fullURL)
 		}
 
 		fmt.Printf("depth=%d %20s | %-7s ", depth, fname, argMethod)
