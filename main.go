@@ -52,7 +52,6 @@ func main() {
 // callback
 func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	fpath = strings.TrimPrefix(fpath, argSourcePath) // without local directory path
-	depth := strings.Count(string(os.PathSeparator), fpath)
 
 	if fpath == "" {
 		return nil
@@ -88,10 +87,12 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		}
 	}
 
+	// depth currently in
+	depth := strings.Count("/", fpath)
+
 	// generate mutations fpath list based on given fpath
 	var fpaths []string
 	fpaths = filePathMutations(fpath, argBackups)
-	fpaths = append([]string{fpath}, fpaths...) // keep original fpath too as first
 
 	// Loop throw all fpath versions
 	for _, fpath := range fpaths {
@@ -203,6 +204,7 @@ func requestClient(URL string) *http.Client {
 // or path [path/to/file.txt]
 func filePathMutations(fpath string, patterns []string) []string {
 	var mutations []string
+	mutations = append(mutations, fpath) // keep original
 
 	fname := filepath.Base(fpath)
 	for _, pattern := range patterns {
@@ -213,6 +215,7 @@ func filePathMutations(fpath string, patterns []string) []string {
 			smut = strings.Replace(pattern, "*", fname, 1)
 		}
 
+		smut = filepath.Join(filepath.Dir(fpath), smut)
 		mutations = append(mutations, smut)
 	}
 

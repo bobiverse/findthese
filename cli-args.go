@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -56,6 +57,8 @@ func validateArgs() error {
 		// path/to/whatever does not exist
 		return fmt.Errorf("Source path [-s, --src]: \n\t%v", err)
 	}
+	argSourcePath, _ = filepath.Abs(argSourcePath)
+	argSourcePath += "/"
 
 	// NB! Do not check here if URL is available!
 	// Because of different configurations given base URL could not be "200 OK"
