@@ -1,0 +1,5 @@
+findthese
+
+syntax: glob
+*.ft
+*.log

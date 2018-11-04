@@ -24,6 +24,7 @@ var argEndpoint string
 var argMethod = "HEAD"                                                              // assigned default value
 var argOutput = "./findthese.report"                                                // assigned default value
 var argDelay = 100                                                                  // assigned default value
+var argDepth = 0                                                                    // assigned default value
 var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}              // assigned default value
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
 var argSkipCodes = []string{"404"}                                                  // assigned default value
@@ -52,6 +53,7 @@ func main() {
 // callback
 func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	fpath = strings.TrimPrefix(fpath, argSourcePath) // without local directory path
+	depth := strings.Count(fpath, "/") + 1
 
 	if fpath == "" {
 		return nil
@@ -64,6 +66,12 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 
 	// Skip predefined dirs
 	if f.IsDir() {
+
+		// Skip by allowed depth
+		if argDepth > 0 && depth > argDepth {
+			return filepath.SkipDir
+		}
+
 		if inSlice(f.Name(), []string{".", "..", ".hg", ".git"}) {
 			// fmt.Printf("-- SKIP ALWAYS [%s] --", f.Name())
 			return filepath.SkipDir
@@ -86,9 +94,6 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			return nil
 		}
 	}
-
-	// depth currently in
-	depth := strings.Count("/", fpath)
 
 	// generate mutations fpath list based on given fpath
 	var fpaths []string

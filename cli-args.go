@@ -25,7 +25,8 @@ func parseArgs() {
 	flaggy.String(&argEndpoint, "u", "url", "URL endpoint to hit -- REQUIRED")
 	flaggy.String(&argMethod, "m", "method", "HTTP Method to use (default: "+argMethod+")")
 	flaggy.String(&argOutput, "o", "output", "Output report to file (default: "+argOutput+")")
-	flaggy.String(&argOutput, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
+	flaggy.Int(&argDepth, "", "depth", "How deep go in folders. '0' no limit  (default: "+fmt.Sprintf("%d", argDepth)+")")
+	flaggy.Int(&argDelay, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
 	flaggy.StringSlice(&argSkip, "", "skip", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkip)+")")
 	flaggy.StringSlice(&argSkipExts, "", "skip-ext", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkipExts)+")")
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")
@@ -69,6 +70,11 @@ func validateArgs() error {
 
 	// Method uppercase - necessary only for visual appearance
 	argMethod = strings.ToUpper(argMethod)
+
+	// Depth
+	if argDepth < 0 {
+		argDepth = 0
+	}
 
 	// Delay
 	argDelay = int(math.Abs(float64(argDelay)))
@@ -128,9 +134,10 @@ func printUsedArgs() {
 	color.Cyan("%20s: %s", "Source path", argSourcePath)
 	color.Cyan("%20s: %s", "URL", argEndpoint)
 	color.Cyan("%20s: %s", "Method", argMethod)
+	color.Cyan("%20s: %v", "Depth scan", argDepth)
 	color.Cyan("%20s: %v", "Dir only", argDirOnly)
-	color.Cyan("%20s: %s", "Output", argOutput)
 	color.Cyan("%20s: %d (ms)", "Delay", argDelay)
+	color.Cyan("%20s: %s", "Output", argOutput)
 	color.Cyan("%20s: %v", "Ignore dir/files", argSkip)
 	color.Cyan("%20s: %v", "Ignore extensions", argSkipExts)
 	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)
