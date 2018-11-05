@@ -167,8 +167,8 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			sMore += color.CyanString(fullURL)
 
 		case sCode[:1] == "4": // 4xx codes
-			sCode = color.MagentaString(sCode)
-			sMore += color.MagentaString(fullURL)
+			sCode = color.RedString(sCode)
+			sMore += color.RedString(fullURL)
 
 		case sCode[:1] == "5": // 5xx codes
 			sCode = color.BlueString(sCode)
