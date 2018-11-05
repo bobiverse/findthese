@@ -23,7 +23,7 @@ var argSourcePath string
 var argEndpoint string
 var argMethod = "HEAD"                                                              // assigned default value
 var argOutput = "./findthese.report"                                                // assigned default value
-var argDelay = 100                                                                  // assigned default value
+var argDelay = 250                                                                  // assigned default value
 var argDepth = 0                                                                    // assigned default value
 var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}              // assigned default value
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
@@ -33,10 +33,15 @@ var argDirOnly = false                                                          
 
 // asterisk "*" replaced by filename
 // if no asterisk found treat as suffix
-var argBackups = []string{"~", ".swp", ".swo", ".tmp", ".TMP", ".lock", ".bkp", ".backup", ".bak", ".old", "_*", "~*"} // assigned default value
+var argBackups = []string{"~", ".swp", ".swo", ".tmp", ".dmp", ".TMP", ".bkp", ".backup", ".bak", ".old", "_*", "~*"} // assigned default value
 
 func main() {
 	parseArgs()
+
+	// // TODO: Count items in source path folder and calc ~ETA
+	// walkMode := ""
+	// filepath.Walk(argSourcePath, localFileVisit)
+
 	printUsedArgs()
 
 	// Walk local source directory
@@ -202,28 +207,4 @@ func requestClient(URL string) *http.Client {
 	}
 
 	return client
-}
-
-// generate list of file mutations
-// given argument can be single filename [file.txt]
-// or path [path/to/file.txt]
-func filePathMutations(fpath string, patterns []string) []string {
-	var mutations []string
-	mutations = append(mutations, fpath) // keep original
-
-	fname := filepath.Base(fpath)
-	for _, pattern := range patterns {
-		smut := fname + pattern // as suffix
-
-		// replace asterisk with fname
-		if strings.Contains(pattern, "*") {
-			smut = strings.Replace(pattern, "*", fname, 1)
-		}
-
-		smut = filepath.Join(filepath.Dir(fpath), smut)
-		mutations = append(mutations, smut)
-	}
-
-	// color.Red("MUT: %v", mutations)
-	return mutations
 }
