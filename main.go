@@ -35,17 +35,26 @@ var argDirOnly = false                                                          
 // if no asterisk found treat as suffix
 var argBackups = []string{"~", ".swp", ".swo", ".tmp", ".dmp", ".TMP", ".bkp", ".backup", ".bak", ".old", "_*", "~*"} // assigned default value
 
+// Walk mode. Before real check/fetch count ETA
+const walkModeCount = 0
+const walkModeProcess = 1
+
+var walkMode = walkModeCount
+var dirItemCount = 0
+var totalScanCount = 0
+
 func main() {
 	parseArgs()
 
-	// // TODO: Count items in source path folder and calc ~ETA
-	// walkMode := ""
-	// filepath.Walk(argSourcePath, localFileVisit)
-
+	// TODO: Count items in source path folder and calc ~ETA
+	walkMode = walkModeCount
+	filepath.Walk(argSourcePath, localFileVisit)
+	// durETA := time.Duration(totalScanCount*(argDelay+200)) * time.Millisecond
 	printUsedArgs()
 
 	// Walk local source directory
-	log.Printf("(START)")
+	log.Printf("(START) -- (%d items + %d mutations)", dirItemCount, totalScanCount)
+	walkMode = walkModeProcess
 	fmt.Println(strings.Repeat("-", 80)) // cleans \r
 	if err := filepath.Walk(argSourcePath, localFileVisit); err != nil {
 		fmt.Printf("ERR: Local directory: %v\n", err)
@@ -98,6 +107,13 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			// fmt.Printf("-- SKIP [%s] --", ext)
 			return nil
 		}
+	}
+
+	// counting mode
+	if walkMode == walkModeCount {
+		dirItemCount++
+		totalScanCount += len(argBackups) - 1
+		return nil
 	}
 
 	// generate mutations fpath list based on given fpath
