@@ -121,6 +121,7 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	fpaths = filePathMutations(fpath, argBackups)
 
 	// Loop throw all fpath versions
+	cleanupLen := 0 // cleaning current line with previous line length
 	for _, fpath := range fpaths {
 		fullURL := argEndpoint + fpath
 		fname := filepath.Base(fpath)
@@ -151,10 +152,12 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		case inSlice(sCode, argSkipCodes) || inSlice(sLength, argSkipSizes):
 			// do not print out
 			fmt.Printf("\r")
-			fmt.Printf(strings.Repeat(" ", 80)) // cleaning
+			fmt.Printf(strings.Repeat(" ", cleanupLen)) // cleaning
 			fmt.Printf("\r")
-			fmt.Printf("-> %s%s \tCODE:%s SIZE:%s ", color.MagentaString(argEndpoint), fpath, sCode, sLength)
-			fmt.Printf(strings.Repeat(" ", 80)) // cleaning
+			sLine := fmt.Sprintf("-> %s%s \tCODE:%s SIZE:%s ", color.MagentaString(argEndpoint), fpath, sCode, sLength)
+			cleanupLen = len(sLine)
+			fmt.Printf(sLine)
+			// fmt.Printf(strings.Repeat(" ", 40)) // cleaning
 			fmt.Printf("\r")
 			continue
 
