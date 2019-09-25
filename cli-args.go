@@ -17,7 +17,7 @@ func parseArgs() {
 	// flaggy.SetName(color.CyanString("%s %s", appname, version))
 	flaggy.SetName(appname)
 	flaggy.SetDescription("Eat my shorts to be best at sports (" + version + ") ")
-	flaggy.DefaultParser.AdditionalHelpPrepend = "https://bitbucket.org/briiC/findthese/\n"
+	flaggy.DefaultParser.AdditionalHelpPrepend = "https://github.com/briiC/findthese\n"
 	flaggy.DefaultParser.AdditionalHelpPrepend += strings.Repeat(".", 80)
 
 	// add a global bool flag for fun
@@ -32,6 +32,7 @@ func parseArgs() {
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")
 	flaggy.StringSlice(&argSkipSizes, "", "skip-size", "Skip responses with this body size (default: "+fmt.Sprintf("%v", argSkipSizes)+")")
 	flaggy.Bool(&argDirOnly, "", "dir-only", "Scan directories only")
+	flaggy.String(&argHeaderString, "H", "headers", "Custom Headers to add")
 	flaggy.String(&argUserAgent, "", "user-agent", "User-Agent used")
 
 	// set the version and parse all inputs into variables
@@ -51,6 +52,35 @@ func parseArgs() {
 
 	if argUserAgent == "random" || argUserAgent == "" {
 		argUserAgent = randomUserAgent()
+	}
+
+	// parse header string to map of key and values
+	// "k1:v1; k2:v2\n k3=v3 " (note "\n" and "=" characters)
+	if argHeaderString != "" {
+		// Replace new line "\n" to semicolon
+		argHeaderString = strings.Replace(argHeaderString, "\\n", ";", -1)
+
+		// Split to pairs
+		pairs := strings.Split(argHeaderString, ";") // ["k1=v1", "k2=val2", "k3=v3"] (3)
+
+		for _, pair := range pairs {
+
+			// If pair doesn't hold colon ":" try to replace "=" to it
+			if !strings.Contains(pair, ":") {
+				pair = strings.Replace(pair, "=", ":", 1)
+			}
+
+			// Make sure there is two parts: key and value
+			parts := strings.SplitN(pair, ":", 2)
+			if len(parts) != 2 {
+				parts = append(parts, "")
+			}
+
+			hKey := strings.TrimSpace(parts[0])
+			hVal := strings.TrimSpace(parts[1])
+			mHeaders[hKey] = hVal
+		}
+
 	}
 
 }
@@ -148,6 +178,7 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)
 	color.Cyan("%20s: %v", "Ignore by size", argSkipSizes)
 	color.Cyan("%20s: %v", "Mutation options", argBackups)
+	color.Cyan("%20s: %v %d", "Headers", mHeaders, len(mHeaders))
 	color.Cyan("%20s: %v", "User-Agent", argUserAgent)
 	fmt.Println(strings.Repeat("-", 80))
 }

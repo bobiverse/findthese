@@ -31,6 +31,10 @@ var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sas
 var argSkipCodes = []string{"404"}                                                  // assigned default value
 var argSkipSizes = []string{}                                                       // assigned default value
 var argDirOnly = false                                                              // assigned default value
+var argHeaderString = ""                                                            // assigned default value
+
+// Parse `argHeaderString` and fills this map
+var mHeaders = map[string]string{}
 
 // asterisk "*" replaced by filename
 // if no asterisk found treat as suffix
@@ -195,6 +199,11 @@ func fetchURL(method, URL string) (*http.Response, error) {
 	// Request
 	req, _ := http.NewRequest(method, URL, nil)
 	req.Header.Set("User-Agent", argUserAgent)
+
+	// Custom headers
+	for hKey, hVal := range mHeaders {
+		req.Header.Set(hKey, hVal)
+	}
 
 	// Make request
 	resp, reqErr := client.Do(req)
