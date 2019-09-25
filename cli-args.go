@@ -27,6 +27,7 @@ func parseArgs() {
 	flaggy.String(&argOutput, "o", "output", "Output report to file (default: "+argOutput+")")
 	flaggy.Int(&argDepth, "", "depth", "How deep go in folders. '0' no limit  (default: "+fmt.Sprintf("%d", argDepth)+")")
 	flaggy.Int(&argDelay, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
+	flaggy.Int(&argTimeout, "", "timeout", "Timeout (seconds) to wait for response  (default: "+fmt.Sprintf("%d", argTimeout)+")")
 	flaggy.StringSlice(&argSkip, "", "skip", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkip)+")")
 	flaggy.StringSlice(&argSkipExts, "", "skip-ext", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkipExts)+")")
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")
@@ -119,6 +120,9 @@ func validateArgs() error {
 	// Delay
 	argDelay = int(math.Abs(float64(argDelay)))
 
+	// Timeout
+	argTimeout = int(math.Abs(float64(argTimeout)))
+
 	// Skpi files/dirs
 	argSkip = normalizeArgSlice(argSkip)
 
@@ -177,6 +181,7 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "Depth scan", argDepth)
 	color.Cyan("%20s: %v", "Dir only", argDirOnly)
 	color.Cyan("%20s: %d (ms)", "Delay", argDelay)
+	color.Cyan("%20s: %d (s)", "Timeout", argTimeout)
 	color.Cyan("%20s: %s", "Output", argOutput)
 	color.Cyan("%20s: %v", "Ignore dir/files", argSkip)
 	color.Cyan("%20s: %v", "Ignore extensions", argSkipExts)

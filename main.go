@@ -25,6 +25,7 @@ var argMethod = "HEAD"                                                          
 var argUserAgent = "random"                                                         // assigned default value
 var argOutput = "./findthese.report"                                                // assigned default value
 var argDelay = 250                                                                  // assigned default value
+var argTimeout = 30                                                                 // assigned default value
 var argDepth = 0                                                                    // assigned default value
 var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}              // assigned default value
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
@@ -236,7 +237,7 @@ func requestClient(URL string) *http.Client {
 
 	client := &http.Client{
 		Transport: tr,
-		// Timeout:   time.Second * 5,
+		Timeout:   time.Duration(argTimeout) * time.Second,
 		// CheckRedirect: func(req *http.Request, via []*http.Request) error {
 		// 	return http.ErrNoLocation
 		// },
