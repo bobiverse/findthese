@@ -32,6 +32,7 @@ func parseArgs() {
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")
 	flaggy.StringSlice(&argSkipSizes, "", "skip-size", "Skip responses with this body size (default: "+fmt.Sprintf("%v", argSkipSizes)+")")
 	flaggy.Bool(&argDirOnly, "", "dir-only", "Scan directories only")
+	flaggy.String(&argUserAgent, "", "user-agent", "User-Agent used")
 
 	// set the version and parse all inputs into variables
 	flaggy.SetVersion(version)
@@ -46,6 +47,10 @@ func parseArgs() {
 	if err := validateArgs(); err != nil {
 		color.Red("\n%v\n\n", err)
 		return
+	}
+
+	if argUserAgent == "random" || argUserAgent == "" {
+		argUserAgent = randomUserAgent()
 	}
 
 }
@@ -143,6 +148,7 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)
 	color.Cyan("%20s: %v", "Ignore by size", argSkipSizes)
 	color.Cyan("%20s: %v", "Mutation options", argBackups)
+	color.Cyan("%20s: %v", "User-Agent", argUserAgent)
 	fmt.Println(strings.Repeat("-", 80))
 }
 

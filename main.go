@@ -22,6 +22,7 @@ var version = "v0.1"
 var argSourcePath string
 var argEndpoint string
 var argMethod = "HEAD"                                                              // assigned default value
+var argUserAgent = "random"                                                         // assigned default value
 var argOutput = "./findthese.report"                                                // assigned default value
 var argDelay = 250                                                                  // assigned default value
 var argDepth = 0                                                                    // assigned default value
@@ -193,7 +194,7 @@ func fetchURL(method, URL string) (*http.Response, error) {
 
 	// Request
 	req, _ := http.NewRequest(method, URL, nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Safari/537.36")
+	req.Header.Set("User-Agent", argUserAgent)
 
 	// Make request
 	resp, reqErr := client.Do(req)
