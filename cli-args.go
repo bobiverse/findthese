@@ -32,8 +32,9 @@ func parseArgs() {
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")
 	flaggy.StringSlice(&argSkipSizes, "", "skip-size", "Skip responses with this body size (default: "+fmt.Sprintf("%v", argSkipSizes)+")")
 	flaggy.Bool(&argDirOnly, "", "dir-only", "Scan directories only")
-	flaggy.String(&argHeaderString, "H", "headers", "Custom Headers to add")
 	flaggy.String(&argUserAgent, "", "user-agent", "User-Agent used")
+	flaggy.String(&argCookieString, "C", "cookie", "Cookie string sent with requests")
+	flaggy.String(&argHeaderString, "H", "headers", "Custom Headers sent with requests")
 
 	// set the version and parse all inputs into variables
 	flaggy.SetVersion(version)
@@ -63,6 +64,9 @@ func parseArgs() {
 		// Split to pairs
 		pairs := strings.Split(argHeaderString, ";") // ["k1=v1", "k2=val2", "k3=v3"] (3)
 
+		// reconstruct string from only valid parts
+		argHeaderString = ""
+
 		for _, pair := range pairs {
 
 			// If pair doesn't hold colon ":" try to replace "=" to it
@@ -79,6 +83,7 @@ func parseArgs() {
 			hKey := strings.TrimSpace(parts[0])
 			hVal := strings.TrimSpace(parts[1])
 			mHeaders[hKey] = hVal
+			argHeaderString += fmt.Sprintf("%s:%s; ", hKey, hVal)
 		}
 
 	}
@@ -178,8 +183,9 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)
 	color.Cyan("%20s: %v", "Ignore by size", argSkipSizes)
 	color.Cyan("%20s: %v", "Mutation options", argBackups)
-	color.Cyan("%20s: %v %d", "Headers", mHeaders, len(mHeaders))
 	color.Cyan("%20s: %v", "User-Agent", argUserAgent)
+	color.Cyan("%20s: %v", "Cookie", argCookieString)
+	color.Cyan("%20s: %v", "Headers", argHeaderString)
 	fmt.Println(strings.Repeat("-", 80))
 }
 

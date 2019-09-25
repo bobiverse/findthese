@@ -31,6 +31,7 @@ var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sas
 var argSkipCodes = []string{"404"}                                                  // assigned default value
 var argSkipSizes = []string{}                                                       // assigned default value
 var argDirOnly = false                                                              // assigned default value
+var argCookieString = ""                                                            // assigned default value
 var argHeaderString = ""                                                            // assigned default value
 
 // Parse `argHeaderString` and fills this map
@@ -198,9 +199,15 @@ func fetchURL(method, URL string) (*http.Response, error) {
 
 	// Request
 	req, _ := http.NewRequest(method, URL, nil)
+
+	// User-Agent
 	req.Header.Set("User-Agent", argUserAgent)
 
+	// Cookies string
+	req.Header.Set("Cookie", argCookieString)
+
 	// Custom headers
+	// Can override previously set headers
 	for hKey, hVal := range mHeaders {
 		req.Header.Set(hKey, hVal)
 	}
