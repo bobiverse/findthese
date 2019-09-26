@@ -7,4 +7,5 @@ require (
 	github.com/integrii/flaggy v1.2.2
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.9 // indirect
+	golang.org/x/sys v0.0.0-20190924154521-2837fb4f24fe // indirect
 )
