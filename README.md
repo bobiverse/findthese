@@ -5,6 +5,9 @@ Check URL for files from given source folder. Like `dirb` or `gobuster` but we k
 findthese --src ../framework --url https://framework.xx/
 ```
 
+![findthese](/res/preview.png)
+
+
 ## Installation
 ```bash
 git clone github.com/briiC/findthese

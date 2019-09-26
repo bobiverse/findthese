@@ -187,13 +187,18 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		switch {
 
 		case isSkipable:
-			sLine := fmt.Sprintf("-> %s%s \tCODE:%s SIZE:%s ", color.MagentaString(argEndpoint), fpath, sCode, sLength)
+			sLine := fmt.Sprintf("-> %s%s \tCODE:%s", color.MagentaString(argEndpoint), fpath, sCode)
+
+			if argMethod != "HEAD" {
+				sLine += fmt.Sprintf("SIZE:%s ", sLength)
+			}
+
 			lastLineLength = len(sLine)
 			fmt.Printf(sLine)
 			continue
 
 		case sCode == "200":
-			sCode = color.GreenString(sCode)
+			sCode = color.HiGreenString(sCode)
 			sMore += color.GreenString(fullURL)
 
 		case sCode[:1] == "3": // 3xx codes
@@ -212,7 +217,11 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		// fmt.Printf("\r")
 
 		msg := fmt.Sprintf("%s ", argMethod)
-		msg += fmt.Sprintf("CODE:%-4s SIZE:%-10s %-10s", sCode, sLength, sMore)
+		msg += fmt.Sprintf("CODE:%-4s ", sCode)
+		if argMethod != "HEAD" {
+			msg += fmt.Sprintf("SIZE:%-10s ", sLength)
+		}
+		msg += sMore
 
 		// color.Red("%d < %d", len(msg), cleanupLen)
 

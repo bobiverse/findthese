@@ -125,7 +125,7 @@ func validateArgs() error {
 	// Also there could be configurations where only valid files gives different response and others fails
 
 	// Method uppercase - necessary only for visual appearance
-	argMethod = strings.ToUpper(argMethod)
+	argMethod = strings.ToUpper(strings.TrimSpace(argMethod))
 
 	// Depth
 	if argDepth < 0 {
