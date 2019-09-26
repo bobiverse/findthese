@@ -19,8 +19,7 @@ cp ./findthese/findthese /usr/local/bin/
 git clone https://github.com/phpmyadmin/phpmyadmin
 findthese --src ./phpmyadmin --url https://some-site.xx/pma/
 ```
-_NOTE_: You can clone different version of phpmyadmin if you know endpoint uses that version.
-
+_NOTE_: You can clone different version of _framework_ if you know endpoint uses that version.
 
 
 ```
