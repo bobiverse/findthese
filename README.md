@@ -1,6 +1,6 @@
 # `findthese`
 
-Check URL for files from given source folder. Like `dirb` or `gobuster` but we know what we looking for.
+Check URL for files from given source folder. Like `dirb` or `gobuster` but we know what we are looking for.
 ```bash
 findthese --src ../framework --url https://framework.xx/
 ```
@@ -54,8 +54,5 @@ Flags:
 - Mark placeholder for file to put in URL: https://example.com?f=^FILE^&auth=john
 - [--mode=info|download] (default: info)
 - file download path where to download all files
-- On first success pause show content and press Y to continue
-- read robots and .htaccess for paths
-- Generate wordlist based on source directory
 - Use `tor` by default (golang sockets transport)
 -
