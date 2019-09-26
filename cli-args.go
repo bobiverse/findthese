@@ -143,6 +143,9 @@ func validateArgs() error {
 	// Skiped sizes
 	var sizes []string
 	argSkipSizes = normalizeArgSlice(argSkipSizes)
+	if len(argSkipSizes) == 1 && argSkipSizes[0] == "" {
+		argSkipSizes = nil
+	}
 	for _, s := range argSkipSizes {
 
 		// Range definitions 100-200
