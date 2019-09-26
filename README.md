@@ -7,7 +7,9 @@ findthese --src ../framework --url https://framework.xx/
 
 ## Installation
 ```bash
-go get -v -u github.com/briiC/findthese
+git clone github.com/briiC/findthese
+cp ./findthese/findthese /usr/local/bin/
+
 ```
 
 ## Usage
@@ -47,6 +49,7 @@ Flags:
 
 
 ### TODO
+- multi threads
 - On key `p` pause scan. Run same command with additional params (fine-tuning) and scan will resume from previous with new settings. (Detects same src and url)
 - Mark placeholder for file to put in URL: https://example.com?f=^FILE^&auth=john
 - [--mode=info|download] (default: info)
