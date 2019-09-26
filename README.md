@@ -18,12 +18,9 @@ Flags:
 
 
 ### TODO
-- Skip based on content in response [--skipcontent="Forbidden biatchj"] (including headers)
 - Mark placeholder for file to put in URL: https://example.com?f=^FILE^&auth=john
-- [--user-agent=....] User agent
 - [--mode=info|download] (default: info)
 - file download path where to download all files
-- headers add
 - On first success pause show content and press Y to continue
 - read robots and .htaccess for paths
 - Generate wordlist based on source directory

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/tls"
 	"fmt"
 	"io/ioutil"
@@ -31,6 +32,7 @@ var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}          
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
 var argSkipCodes = []string{"404"}                                                  // assigned default value
 var argSkipSizes = []string{}                                                       // assigned default value
+var argSkipContent string                                                           // assigned default value
 var argDirOnly = false                                                              // assigned default value
 var argCookieString = ""                                                            // assigned default value
 var argHeaderString = ""                                                            // assigned default value
@@ -134,7 +136,9 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		fname := filepath.Base(fpath)
 
 		// Delay after basic checks and right before call
-		time.Sleep(time.Duration(argDelay) * time.Millisecond)
+		if argDelay > 0 {
+			time.Sleep(time.Duration(argDelay) * time.Millisecond)
+		}
 
 		// Fetch
 		resp, err := fetchURL(argMethod, fullURL)
@@ -147,16 +151,23 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		sCode := fmt.Sprintf("%d", resp.StatusCode)
 
 		// try to read real body length if -1 found
+		var buf []byte
 		if resp.ContentLength == -1 {
-			buf, _ := ioutil.ReadAll(resp.Body)
+			buf, _ = ioutil.ReadAll(resp.Body)
 			resp.ContentLength = int64(len(buf))
 		}
 		sLength := fmt.Sprintf("%d", resp.ContentLength)
 
+		// Check for "skip" rules
+		isSkipable := false ||
+			inSlice(sCode, argSkipCodes) ||
+			inSlice(sLength, argSkipSizes) ||
+			bytes.Contains(buf, []byte(argSkipContent))
+
 		sMore := "" // add at the end of line
 		switch {
 
-		case inSlice(sCode, argSkipCodes) || inSlice(sLength, argSkipSizes):
+		case isSkipable:
 			// do not print out
 			fmt.Printf("\r")
 			fmt.Printf(strings.Repeat(" ", cleanupLen)) // cleaning
