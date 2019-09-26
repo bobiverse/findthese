@@ -163,11 +163,11 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		// Check for "skip" rules
 		isSkipable := inSlice(sCode, argSkipCodes)
 
+		// by size
+		isSkipable = isSkipable || inSlice(sLength, argSkipSizes)
+
 		// Skip content for specifix methods
 		if !isSkipable && argMethod != "HEAD" {
-			// by size
-			isSkipable = inSlice(sLength, argSkipSizes)
-
 			// by content
 			if argSkipContent != "" {
 				isSkipable = bytes.Contains(buf, []byte(argSkipContent))

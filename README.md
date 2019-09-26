@@ -20,6 +20,7 @@ Flags:
 
 
 ### TODO
+- On key `p` pause scan. Run same command with additional params (fine-tuning) and scan will resume from previous with new settings. (Detects same src and url)
 - Mark placeholder for file to put in URL: https://example.com?f=^FILE^&auth=john
 - [--mode=info|download] (default: info)
 - file download path where to download all files
