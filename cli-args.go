@@ -35,7 +35,7 @@ func parseArgs() {
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code")
 	flaggy.StringSlice(&argSkipSizes, "", "skip-size", "Skip responses with this body size")
 	flaggy.String(&argSkipContent, "", "skip-content", "Skip responses if given content found")
-	flaggy.Bool(&argDirOnly, "", "dir-only", "Scan directories only")
+	flaggy.Bool(&argDirOnly, "D", "dir-only", "Scan directories only")
 	flaggy.String(&argUserAgent, "", "user-agent", "User-Agent used")
 	flaggy.String(&argCookieString, "C", "cookie", "Cookie string sent with requests")
 	flaggy.String(&argHeaderString, "H", "headers", "Custom Headers sent with requests")

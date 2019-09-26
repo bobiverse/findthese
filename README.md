@@ -42,10 +42,11 @@ Flags:
      --skip-code  Skip responses with this response HTTP code (default: 404)
      --skip-size  Skip responses with this body size
      --skip-content  Skip responses if given content found
-     --dir-only  Scan directories only
+  -D --dir-only  Scan directories only
      --user-agent  User-Agent used (default: random)
   -C --cookie  Cookie string sent with requests
   -H --headers  Custom Headers sent with requests
+
 
 
 ```
