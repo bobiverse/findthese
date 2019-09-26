@@ -21,7 +21,7 @@ func LogSetupAndDestruct(fpath string) func() {
 		log.Panicln(err)
 	}
 	log.SetFlags(0)
-	log.SetOutput(io.MultiWriter(os.Stderr, logFile))
+	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
 
 	return func() {
 		e := logFile.Close()

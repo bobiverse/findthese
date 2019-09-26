@@ -29,6 +29,7 @@ func parseArgs() {
 	flaggy.Int(&argDepth, "", "depth", "How deep go in folders. '0' no limit  (default: "+fmt.Sprintf("%d", argDepth)+")")
 	flaggy.Int(&argDelay, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
 	flaggy.Int(&argTimeout, "", "timeout", "Timeout (seconds) to wait for response  (default: "+fmt.Sprintf("%d", argTimeout)+")")
+	flaggy.StringSlice(&argBackups, "", "mutations", "Mutations of checked file (default: "+fmt.Sprintf("%v", argBackups)+")")
 	flaggy.StringSlice(&argSkip, "", "skip", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkip)+")")
 	flaggy.StringSlice(&argSkipExts, "", "skip-ext", "Skip files with these extensions (default: "+fmt.Sprintf("%v", argSkipExts)+")")
 	flaggy.StringSlice(&argSkipCodes, "", "skip-code", "Skip responses with this response HTTP code (default: "+fmt.Sprintf("%v", argSkipCodes)+")")

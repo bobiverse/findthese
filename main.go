@@ -76,6 +76,9 @@ func main() {
 
 }
 
+// Last line length to know how much to clean
+var lastLineLength int // cleaning current line with previous line length
+
 // callback
 func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	fpath = strings.TrimPrefix(fpath, argSourcePath) // without local directory path
@@ -133,7 +136,6 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	fpaths = filePathMutations(fpath, argBackups)
 
 	// Loop throw all fpath versions
-	cleanupLen := 0 // cleaning current line with previous line length
 	for _, fpath := range fpaths {
 		fullURL := argEndpoint + fpath
 		// fname := filepath.Base(fpath)
@@ -177,18 +179,17 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			}
 		}
 
+		fmt.Printf("\r")
+		fmt.Printf(strings.Repeat(" ", lastLineLength)) // cleaning
+		fmt.Printf("\r")
+
 		sMore := "" // add at the end of line
 		switch {
 
 		case isSkipable:
-			fmt.Printf("\r")
-			fmt.Printf(strings.Repeat(" ", cleanupLen)) // cleaning
-			fmt.Printf("\r")
 			sLine := fmt.Sprintf("-> %s%s \tCODE:%s SIZE:%s ", color.MagentaString(argEndpoint), fpath, sCode, sLength)
-			cleanupLen = len(sLine)
+			lastLineLength = len(sLine)
 			fmt.Printf(sLine)
-			// fmt.Printf(strings.Repeat(" ", 40)) // cleaning
-			fmt.Printf("\r")
 			continue
 
 		case sCode == "200":
@@ -208,13 +209,14 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			sMore += color.BlueString(fullURL)
 		}
 
+		// fmt.Printf("\r")
+
 		msg := fmt.Sprintf("%s ", argMethod)
 		msg += fmt.Sprintf("CODE:%-4s SIZE:%-10s %-10s", sCode, sLength, sMore)
-		msg += "\n"
 
-		log.Print(msg)
-		// fmt.Println(msg)
+		// color.Red("%d < %d", len(msg), cleanupLen)
 
+		log.Println(msg)
 	}
 
 	return nil
