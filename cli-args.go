@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -24,7 +25,7 @@ func parseArgs() {
 	flaggy.String(&argSourcePath, "s", "src", "Source path of directory -- REQUIRED")
 	flaggy.String(&argEndpoint, "u", "url", "URL endpoint to hit -- REQUIRED")
 	flaggy.String(&argMethod, "m", "method", "HTTP Method to use (default: "+argMethod+")")
-	flaggy.String(&argOutput, "o", "output", "Output report to file (default: "+argOutput+")")
+	flaggy.String(&argReportPath, "o", "output", "Output report to file (default: "+argReportPath+")")
 	flaggy.Int(&argDepth, "", "depth", "How deep go in folders. '0' no limit  (default: "+fmt.Sprintf("%d", argDepth)+")")
 	flaggy.Int(&argDelay, "z", "delay", "Delay every request for N milliseconds (default: "+fmt.Sprintf("%d", argDelay)+")")
 	flaggy.Int(&argTimeout, "", "timeout", "Timeout (seconds) to wait for response  (default: "+fmt.Sprintf("%d", argTimeout)+")")
@@ -88,6 +89,13 @@ func parseArgs() {
 			argHeaderString += fmt.Sprintf("%s:%s; ", hKey, hVal)
 		}
 
+	}
+
+	// parse URL to add suffix to report filename
+	if argReportPath != "" {
+		if urlparts, err := url.Parse(argEndpoint); err == nil {
+			argReportPath += "." + urlparts.Hostname()
+		}
 	}
 
 }
@@ -196,7 +204,7 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "Dir only", argDirOnly)
 	color.Cyan("%20s: %d (ms)", "Delay", argDelay)
 	color.Cyan("%20s: %d (s)", "Timeout", argTimeout)
-	color.Cyan("%20s: %s", "Output", argOutput)
+	color.Cyan("%20s: %s", "Report output", argReportPath)
 	color.Cyan("%20s: %v", "Ignore dir/files", argSkip)
 	color.Cyan("%20s: %v", "Ignore extensions", argSkipExts)
 	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)

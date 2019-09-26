@@ -24,7 +24,7 @@ var argSourcePath string
 var argEndpoint string
 var argMethod = "HEAD"                                                              // assigned default value
 var argUserAgent = "random"                                                         // assigned default value
-var argOutput = "./findthese.report"                                                // assigned default value
+var argReportPath = "./findthese.report"                                            // assigned default value
 var argDelay = 150                                                                  // assigned default value
 var argTimeout = 10                                                                 // assigned default value
 var argDepth = 0                                                                    // assigned default value
@@ -60,6 +60,9 @@ func main() {
 	filepath.Walk(argSourcePath, localFileVisit)
 	// durETA := time.Duration(totalScanCount*(argDelay+200)) * time.Millisecond
 	printUsedArgs()
+
+	// Setup logging
+	defer LogSetupAndDestruct(argReportPath)()
 
 	// Walk local source directory
 	log.Printf("(START) -- (%d items + %d mutations)", dirItemCount, totalScanCount)
@@ -205,9 +208,12 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			sMore += color.BlueString(fullURL)
 		}
 
-		fmt.Printf("depth=%d %20s | %-7s ", depth, fname, argMethod)
-		fmt.Printf("CODE:%-4s SIZE:%-10s %-10s", sCode, sLength, sMore)
-		fmt.Println()
+		msg := fmt.Sprintf("depth=%d %20s | %-7s ", depth, fname, argMethod)
+		msg += fmt.Sprintf("CODE:%-4s SIZE:%-10s %-10s", sCode, sLength, sMore)
+		msg += "\n"
+
+		log.Print(msg)
+		// fmt.Println(msg)
 
 	}
 
