@@ -1,5 +1,26 @@
 # `findthese`
 
+Check URL for files from given source folder. Like `dirb` or `gobuster` but we know what we looking for.
+```bash
+findthese --src ../framework --url https://framework.xx/
+```
+
+## Installation
+```bash
+go get -v -u github.com/briiC/findthese
+```
+
+## Usage
+
+```bash
+# Example: Check endpoint for phpmyadmin files - which are accessible from internet
+git clone https://github.com/phpmyadmin/phpmyadmin
+findthese --src ./phpmyadmin --url https://some-site.xx/pma/
+```
+_NOTE_: You can clone different version of phpmyadmin if you know endpoint uses that version.
+
+
+
 ```
 Flags:
      --version  Displays the program version string.
@@ -21,7 +42,6 @@ Flags:
      --user-agent  User-Agent used (default: random)
   -C --cookie  Cookie string sent with requests
   -H --headers  Custom Headers sent with requests
-
 
 ```
 
