@@ -25,8 +25,8 @@ var argEndpoint string
 var argMethod = "HEAD"                                                              // assigned default value
 var argUserAgent = "random"                                                         // assigned default value
 var argOutput = "./findthese.report"                                                // assigned default value
-var argDelay = 250                                                                  // assigned default value
-var argTimeout = 30                                                                 // assigned default value
+var argDelay = 150                                                                  // assigned default value
+var argTimeout = 10                                                                 // assigned default value
 var argDepth = 0                                                                    // assigned default value
 var argSkip = []string{"jquery", "css", "img", "images", "i18n", "po"}              // assigned default value
 var argSkipExts = []string{".png", ".jpeg", "jpg", "Gif", ".CSS", ".less", ".sass"} // assigned default value
@@ -152,9 +152,10 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 
 		// try to read real body length if empty
 		var buf []byte
+		buf, _ = ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+
 		if resp.ContentLength <= 0 {
-			buf, _ = ioutil.ReadAll(resp.Body)
-			resp.Body.Close()
 			resp.ContentLength = int64(len(buf))
 		}
 		sLength := fmt.Sprintf("%d", resp.ContentLength)
