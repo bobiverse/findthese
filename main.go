@@ -136,7 +136,7 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 	cleanupLen := 0 // cleaning current line with previous line length
 	for _, fpath := range fpaths {
 		fullURL := argEndpoint + fpath
-		fname := filepath.Base(fpath)
+		// fname := filepath.Base(fpath)
 
 		// Delay after basic checks and right before call
 		if argDelay > 0 {
@@ -208,7 +208,7 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 			sMore += color.BlueString(fullURL)
 		}
 
-		msg := fmt.Sprintf("depth=%d %20s | %-7s ", depth, fname, argMethod)
+		msg := fmt.Sprintf("%s ", argMethod)
 		msg += fmt.Sprintf("CODE:%-4s SIZE:%-10s %-10s", sCode, sLength, sMore)
 		msg += "\n"
 
