@@ -31,21 +31,22 @@ Flags:
   -h --help  Displays help with available flag, subcommand, and positional value parameters.
   -s --src  Source path of directory -- REQUIRED
   -u --url  URL endpoint to hit -- REQUIRED
-  -m --method  HTTP Method to use (default: HEAD) (default: HEAD)
-  -o --output  Output report to file (default: ./findthese.report) (default: ./findthese.report)
-     --depth  How deep go in folders. '0' no limit  (default: 0) (default: 0)
-  -z --delay  Delay every request for N milliseconds (default: 150) (default: 150)
-     --timeout  Timeout (seconds) to wait for response  (default: 10) (default: 10)
-     --mutations  Mutations of checked file (default: [~ .swp .swo .tmp .dmp .bkp .backup .bak .zip .tar .old _* ~*]) (default: ~,.swp,.swo,.tmp,.dmp,.bkp,.backup,.bak,.zip,.tar,.old,_*,~*)
-     --skip  Skip files with these extensions (default: [jquery css img images i18n po]) (default: jquery,css,img,images,i18n,po)
-     --skip-ext  Skip files with these extensions (default: [.png .jpeg jpg Gif .CSS .less .sass]) (default: .png,.jpeg,jpg,Gif,.CSS,.less,.sass)
-     --skip-code  Skip responses with this response HTTP code (default: [404]) (default: 404)
-     --skip-size  Skip responses with this body size (default: [])
+  -m --method  HTTP Method to use (default: HEAD)
+  -o --output  Output report to file (default: ./findthese.report)
+     --depth  How deep go in folders. '0' no limit  (default: 0)
+  -z --delay  Delay every request for N milliseconds (default: 150)
+     --timeout  Timeout (seconds) to wait for response  (default: 10)
+     --mutations  Mutations of checked file (default: ~,.swp,.swo,.tmp,.dmp,.bkp,.backup,.bak,.zip,.tar,.old,_*,~*)
+     --skip  Skip files with these extensions (default: jquery,css,img,images,i18n,po)
+     --skip-ext  Skip files with these extensions (default: .png,.jpeg,jpg,Gif,.CSS,.less,.sass)
+     --skip-code  Skip responses with this response HTTP code (default: 404)
+     --skip-size  Skip responses with this body size
      --skip-content  Skip responses if given content found
      --dir-only  Scan directories only
      --user-agent  User-Agent used (default: random)
   -C --cookie  Cookie string sent with requests
   -H --headers  Custom Headers sent with requests
+
 
 ```
 
