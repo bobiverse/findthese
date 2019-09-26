@@ -67,11 +67,11 @@ func main() {
 	// Walk local source directory
 	log.Printf("(START) -- (%d items + %d mutations)", dirItemCount, totalScanCount)
 	walkMode = walkModeProcess
-	fmt.Println(strings.Repeat("-", 80)) // cleans \r
+	fmt.Println(strings.Repeat("-", 80))
 	if err := filepath.Walk(argSourcePath, localFileVisit); err != nil {
 		fmt.Printf("ERR: Local directory: %v\n", err)
 	}
-	fmt.Println(strings.Repeat("-", 80)) // cleans \r
+	fmt.Println("\n" + strings.Repeat("-", 80))
 	log.Printf("(END)")
 
 }
