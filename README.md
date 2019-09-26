@@ -60,3 +60,7 @@ Flags:
 - file download path where to download all files
 - Use `tor` by default (golang sockets transport)
 -
+
+
+### Preview
+![findthese](/res/preview.gif)
