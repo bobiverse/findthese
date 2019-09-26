@@ -93,7 +93,8 @@ func parseArgs() {
 	}
 
 	// parse URL to add suffix to report filename
-	if argReportPath != "" {
+	// if custom report path given do not add suffix
+	if argReportPath != "" && argReportPath == "./findthese.report" {
 		if urlparts, err := url.Parse(argEndpoint); err == nil {
 			argReportPath += "." + urlparts.Hostname()
 		}
@@ -205,7 +206,6 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "Dir only", argDirOnly)
 	color.Cyan("%20s: %d (ms)", "Delay", argDelay)
 	color.Cyan("%20s: %d (s)", "Timeout", argTimeout)
-	color.Cyan("%20s: %s", "Report output", argReportPath)
 	color.Cyan("%20s: %v", "Ignore dir/files", argSkip)
 	color.Cyan("%20s: %v", "Ignore extensions", argSkipExts)
 	color.Cyan("%20s: %v", "Ignore by HTTP Code", argSkipCodes)
@@ -215,6 +215,7 @@ func printUsedArgs() {
 	color.Cyan("%20s: %v", "User-Agent", argUserAgent)
 	color.Cyan("%20s: %v", "Cookie", argCookieString)
 	color.Cyan("%20s: %v", "Headers", argHeaderString)
+	color.Cyan("%20s: %s", "Report output", argReportPath)
 	fmt.Println(strings.Repeat("-", 80))
 }
 
