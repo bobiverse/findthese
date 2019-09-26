@@ -92,10 +92,17 @@ func parseArgs() {
 
 	}
 
+	// Trailing slash - domain must end with slash
+	// Do not add slash if longer URL given
+	urlparts, errParse := url.Parse(argEndpoint)
+	if strings.HasSuffix(argEndpoint, urlparts.Hostname()) {
+		argEndpoint = strings.TrimSuffix(argEndpoint, "/") + "/"
+	}
+
 	// parse URL to add suffix to report filename
 	// if custom report path given do not add suffix
 	if argReportPath != "" && argReportPath == "./findthese.report" {
-		if urlparts, err := url.Parse(argEndpoint); err == nil {
+		if errParse == nil {
 			argReportPath += "." + urlparts.Hostname()
 		}
 	}
@@ -116,9 +123,6 @@ func validateArgs() error {
 	// NB! Do not check here if URL is available!
 	// Because of different configurations given base URL could not be "200 OK"
 	// Also there could be configurations where only valid files gives different response and others fails
-
-	// // Trailing slash - URL must end with slash
-	// argEndpoint = strings.TrimSuffix(argEndpoint, "/") + "/"
 
 	// Method uppercase - necessary only for visual appearance
 	argMethod = strings.ToUpper(argMethod)
