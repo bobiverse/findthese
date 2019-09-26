@@ -170,6 +170,16 @@ func validateArgs() error {
 	}
 	argSkipSizes = sizes
 
+	// Can't use method `HEAD` with certains flags depending on response body
+	if argMethod == "HEAD" {
+		if argSkipSizes != nil {
+			argMethod = "GET"
+		}
+		if argSkipContent != "" {
+			argMethod = "GET"
+		}
+	}
+
 	// No errors
 	return nil
 }

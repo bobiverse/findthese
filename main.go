@@ -150,25 +150,33 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 
 		sCode := fmt.Sprintf("%d", resp.StatusCode)
 
-		// try to read real body length if -1 found
+		// try to read real body length if empty
 		var buf []byte
-		if resp.ContentLength == -1 {
+		if resp.ContentLength <= 0 {
 			buf, _ = ioutil.ReadAll(resp.Body)
+			resp.Body.Close()
 			resp.ContentLength = int64(len(buf))
 		}
 		sLength := fmt.Sprintf("%d", resp.ContentLength)
 
 		// Check for "skip" rules
-		isSkipable := false ||
-			inSlice(sCode, argSkipCodes) ||
-			inSlice(sLength, argSkipSizes) ||
-			bytes.Contains(buf, []byte(argSkipContent))
+		isSkipable := inSlice(sCode, argSkipCodes)
+
+		// Skip content for specifix methods
+		if !isSkipable && argMethod != "HEAD" {
+			// by size
+			isSkipable = inSlice(sLength, argSkipSizes)
+
+			// by content
+			if argSkipContent != "" {
+				isSkipable = bytes.Contains(buf, []byte(argSkipContent))
+			}
+		}
 
 		sMore := "" // add at the end of line
 		switch {
 
 		case isSkipable:
-			// do not print out
 			fmt.Printf("\r")
 			fmt.Printf(strings.Repeat(" ", cleanupLen)) // cleaning
 			fmt.Printf("\r")
