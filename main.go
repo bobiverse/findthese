@@ -187,7 +187,7 @@ func localFileVisit(fpath string, f os.FileInfo, err error) error {
 		switch {
 
 		case isSkipable:
-			sLine := fmt.Sprintf("-> %s%s \tCODE:%s", color.MagentaString(argEndpoint), fpath, sCode)
+			sLine := fmt.Sprintf("-> %s%s \tCODE:%s ", color.MagentaString(argEndpoint), fpath, sCode)
 
 			if argMethod != "HEAD" {
 				sLine += fmt.Sprintf("SIZE:%s ", sLength)
