@@ -42,7 +42,7 @@ var mHeaders = map[string]string{}
 
 // asterisk "*" replaced by filename
 // if no asterisk found treat as suffix
-var argBackups = []string{"~", ".swp", ".swo", ".tmp", ".dmp", ".TMP", ".bkp", ".backup", ".bak", ".old", "_*", "~*"} // assigned default value
+var argBackups = []string{"~", ".swp", ".swo", ".tmp", ".dmp", ".bkp", ".backup", ".bak", ".zip", ".tar", ".old", "_*", "~*"} // assigned default value
 
 // Walk mode. Before real check/fetch count ETA
 const walkModeCount = 0
